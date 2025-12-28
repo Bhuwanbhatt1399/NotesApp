@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import SearchBar from '../SearchBar/SearchBar'
 
 
-const Navbar = (userInfo) => {
+const Navbar = ({userInfo}) => {
   const [searchQuery, setsearchQuery] = useState("");
   const navigate = useNavigate();
   const onLogout = () => {
+    localStorage.clear
     navigate("/login")
   }
 

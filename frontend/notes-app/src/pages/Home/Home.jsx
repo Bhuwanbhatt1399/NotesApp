@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback,  useState } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import NoteCard from '../../components/Cards/NoteCard'
 import { MdAdd } from 'react-icons/md'
@@ -6,6 +6,9 @@ import AddEditNotes from './AddEditNotes'
 import Modal from "react-modal"
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
+
+import { useEffect } from "react";
+
 const Home = () => {
 
   const [openAddEditModel, setOpenAddEditModel] = useState({
@@ -21,22 +24,54 @@ const Home = () => {
   const navigate = useNavigate();
 
   //Get user info
-  const getUserInfo =useCallback (async () => {
+ const getUserInfo = useCallback(async () => {
     try {
-      const response = await axiosInstance.get("/get-user")
-      if (response.data?.user) setUserInfo (response.data.user); 
-        
-      } catch (error) {
+      const response = await axiosInstance.get("http://localhost:8000/get-user");
+
+      if (response.data?.user) {
+        setUserInfo(response.data.user);
+      }
+    } catch (error) {
       if (error.response?.status === 401) {
         localStorage.clear();
         navigate("/login");
       }
     }
-  },[navigate])
+  }, [navigate]);
 
-  useEffect(() => {
-  getUserInfo();
-}, [getUserInfo]);
+
+
+
+
+// useEffect(() => {
+//   const fetchUser = async () => {
+//     const token = localStorage.getItem("token");
+
+//     if (!token) return;
+
+//     try {
+//       const response = await axios.get(
+//         "http://localhost:8000/get-user",
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+
+//       console.log(response.data);
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
+
+//   fetchUser();
+// }, []);
+
+
+ useEffect(() => {
+    getUserInfo();
+  }, [getUserInfo]);
   return (
     <>
       <Navbar  userInfo={userInfo} />
