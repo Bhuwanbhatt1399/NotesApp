@@ -11,12 +11,12 @@ const noteSchema = new Schema({
         ref: "User",
         required: true
     },
-    // userId: { type: String, required: true },
+    
     createdOn: { type: Date, default: Date.now }
 
-    // createdOn:{type:Date, default:new Date().getTime()}
+    
 },)
-//{ timestamps: true }
+
 
 
 module.exports = mongoose.model("Note", noteSchema)

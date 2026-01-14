@@ -32,12 +32,24 @@ const Login = () => {
                 password: password,
             });
 
-            //handle successfully login response 
+
+           
+            // handle successfully login response 
             if (response.data && response.data.accessToken) {
                 localStorage.setItem("token", response.data.accessToken)
                 navigate('/dashboard')
 
-            }
+            }    
+
+
+            // // const token = response.data.accessToken || response.data.token;
+
+            // if (token) {
+            //     localStorage.setItem("token", token);
+            //     navigate("/dashboard");
+            // } else {
+            //     setError("Token not received from server");
+            // }
 
         } catch (error) {
             // handle login error

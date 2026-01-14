@@ -3,32 +3,64 @@ import Navbar from '../../components/Navbar/Navbar'
 import PasswordInput from '../../components/Input/PasswordInput'
 import { Link } from 'react-router-dom';
 import { validateEmail } from '../../utils/helper';
+import axiosInstance from '../../utils/axiosInstance';
 
+import { useNavigate } from "react-router-dom";
 const SignUp = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
     e.preventDefault()
-  
-if(!name){
-  setError("please enter your name ")
-  return;
-}
-  
-  if (!validateEmail(email)) {
-    setError("please enter a valid email address")
-    return;
+
+    if (!name) {
+      setError("Please enter your name ")
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address")
+      return;
     }
     if (!password) {
-    setError("please enter the  password")
-    return;
-  }
-    setError("")
-  }
+      setError("Please enter the  password")
+      return;
+    }
+    setError(null)
+    // setError('')
+
+    //SignUp API call
+    try {
+      const response = await axiosInstance.post("/create-account", {
+        fullName: name,
+        email: email,
+        password: password,
+      });
+
+      // handle successfully resistration response 
+      if (response.data && response.data.error) {
+        setError(response.data.message);
+        return;
+      }
+      navigate("/login");
+
+    } catch (error) {
+
+      // handle login error
+      if (error.response && error.response.data && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("An unexpected error occured. Please try again");
+      }
+    }
+
+
+
+  };
   return (
     <>
       <Navbar />
@@ -44,7 +76,7 @@ if(!name){
               onChange={(e) => setName(e.target.value)}
             />
             <input
-              type="text"
+              type="email"
               placeholder='Email'
               className='input-box'
               value={email}
@@ -61,7 +93,7 @@ if(!name){
             </button>
 
             <p className='text-sm text-center mt-4'>
-              Alrady have ab Account?{""}
+              Already have an account?{""}
               <Link to="/login" className=" font-medium text-blue-500 underline">Login</Link>
             </p>
           </form>
